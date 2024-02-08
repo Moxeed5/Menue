@@ -12,5 +12,9 @@ namespace Bham_Events.Models
 
         [JsonProperty("cost")]
         public double Cost { get; set; }
+
+        public string Id { get; set; }
+
+
     }
 }

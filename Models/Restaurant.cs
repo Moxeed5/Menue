@@ -12,5 +12,7 @@ namespace Bham_Events.Models
 
         [JsonProperty("menuId")]
         public string MenuId { get; set; }
+
+        public string Id { get; set; }
     }
 }

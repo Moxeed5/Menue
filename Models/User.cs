@@ -9,5 +9,9 @@ namespace Bham_Events.Models
 
         [JsonProperty("likedItems")]
         public Dictionary<string, bool> LikedItems { get; set; }
+
+        public string Id { get; set; }
+
+
     }
 }
