@@ -85,13 +85,10 @@ public class FirebaseService
 
     //Menu
 
-    public async Task<Menu> AddMenuAsync(Menu menu)
-    {
-        var result = await _firebaseClient
-            .Child("Menus")
-            .PostAsync(menu);
+    //add menu
+    
 
-        menu.Id = result.Key; // Firebase generates a unique key for each item
-        return menu;
-    }
+    //get all menus
+
+   
 }

@@ -10,11 +10,10 @@ namespace Bham_Events.Models
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("cost")]
-        public double Cost { get; set; }
+        [JsonProperty("price")]
+        public double Price { get; set; }
 
+        // Id is assigned when a new MenuItem is added to Firebase
         public string Id { get; set; }
-
-
     }
 }

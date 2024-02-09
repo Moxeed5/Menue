@@ -8,10 +8,7 @@ namespace Bham_Events.Models
         [JsonProperty("restaurants")]
         public Dictionary<string, Restaurant> Restaurants { get; set; }
 
-        // Assuming each Menu contains a list of MenuItems
-        [JsonProperty("menus")]
-        public Dictionary<string, Menu> Menus { get; set; }
-
+        
         [JsonProperty("users")]
         public Dictionary<string, User> Users { get; set; }
     }
