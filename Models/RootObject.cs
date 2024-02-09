@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Bham_Events.Models
 {
@@ -7,11 +8,9 @@ namespace Bham_Events.Models
         [JsonProperty("restaurants")]
         public Dictionary<string, Restaurant> Restaurants { get; set; }
 
+        // Assuming each Menu contains a list of MenuItems
         [JsonProperty("menus")]
-        public Dictionary<string, Dictionary<string, MenuItem>> MenuItems { get; set; }
-
-        [JsonProperty("menus")]
-        public Dictionary<string, Dictionary<string, Menu>> Menus { get; set; }
+        public Dictionary<string, Menu> Menus { get; set; }
 
         [JsonProperty("users")]
         public Dictionary<string, User> Users { get; set; }

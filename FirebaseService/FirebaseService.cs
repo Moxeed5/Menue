@@ -12,14 +12,12 @@ public class FirebaseService
     public FirebaseService()
     {
         // Initialize the FirebaseClient here with your Firebase project URL and optionally an Auth Token if needed
-        _firebaseClient = new FirebaseClient(
-            "https://your-firebase-project.firebaseio.com/",
-            new FirebaseOptions
-            {
-                AuthTokenAsyncFactory = () => Task.FromResult("your_auth_token") // Only if you need Auth, else remove this
-            });
+        _firebaseClient = new FirebaseClient("https://birmingham-events-default-rtdb.firebaseio.com/");
     }
 
+    //Restuarant Crud 
+
+    //add
     public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
     {
         var result = await _firebaseClient
@@ -35,6 +33,7 @@ public class FirebaseService
         return null;
     }
 
+    //Get all
     public async Task<List<Restaurant>> GetAllRestaurantsAsync()
     {
         var restaurants = await _firebaseClient
@@ -50,6 +49,7 @@ public class FirebaseService
         }).ToList();
     }
 
+    //get specific
     public async Task<Restaurant> GetRestaurantAsync(string id)
     {
         var restaurant = await _firebaseClient
@@ -65,6 +65,7 @@ public class FirebaseService
         return null;
     }
 
+    //update a restaurant
     public async Task UpdateRestaurantAsync(string id, Restaurant restaurant)
     {
         await _firebaseClient
@@ -73,11 +74,24 @@ public class FirebaseService
             .PutAsync(restaurant);
     }
 
+    //delete restaurant 
     public async Task DeleteRestaurantAsync(string id)
     {
         await _firebaseClient
             .Child("Restaurants")
             .Child(id)
             .DeleteAsync();
+    }
+
+    //Menu
+
+    public async Task<Menu> AddMenuAsync(Menu menu)
+    {
+        var result = await _firebaseClient
+            .Child("Menus")
+            .PostAsync(menu);
+
+        menu.Id = result.Key; // Firebase generates a unique key for each item
+        return menu;
     }
 }

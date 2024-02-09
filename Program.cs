@@ -18,11 +18,25 @@ FirebaseApp.Create(new AppOptions()
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddScoped<FirebaseService>();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
+//Register services
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseAuthorization();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1"));
+}
+
+// Other configurations like app.UseHttpsRedirection(), app.UseAuthorization(), etc.
+
 app.MapControllers();
 
 app.Run();
