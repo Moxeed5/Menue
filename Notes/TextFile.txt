@@ -1,0 +1,15 @@
+﻿TODO:
+
+Finish writing methods for crud for other classes.
+
+aka write crud method for menu items and users and I guess menu.
+
+creating the crud for users will create the root node in firebase db.
+
+Possibly add posts, or maybe wait until later. 
+
+Once All end points are set up, start looking at using Nuxt and vue.
+
+Later:
+
+Implement sorting logic, auth, and posts. 

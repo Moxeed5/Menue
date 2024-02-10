@@ -10,12 +10,11 @@ namespace Bham_Events.Models
         [JsonProperty("location")]
         public string Location { get; set; }
 
-        // Directly include the Menu object instead of MenuId
         [JsonProperty("menu")]
         public Menu Menu { get; set; }
 
-        // Id is typically assigned after fetching the data from Firebase
-        // It doesn't need a JsonProperty because it's not part of the stored JSON
+        // Ignore this property when sending to Firebase
+        [JsonIgnore]
         public string Id { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace Bham_Events.Models
         public double Price { get; set; }
 
         // Id is assigned when a new MenuItem is added to Firebase
+        [JsonIgnore]
         public string Id { get; set; }
     }
 }
