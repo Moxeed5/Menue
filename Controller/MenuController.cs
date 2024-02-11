@@ -31,6 +31,20 @@ public class MenuController : ControllerBase
        
     }
 
-    
+    [HttpPost("{restaurantId}/menu")]
+    public async Task<IActionResult> AddMenu(string restaurantId, [FromBody] Menu menu)
+    {
+        try
+        {
+            await _firebaseService.AddMenuAsync(restaurantId, menu);
+            return Ok(); // You might want to return the added menu or simply a success message
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error: " + ex.Message);
+        }
+    }
+
+
 
 }

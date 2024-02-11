@@ -3,6 +3,7 @@ using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 public class FirebaseService
@@ -20,18 +21,25 @@ public class FirebaseService
     //add
     public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
     {
+        var newRestaurant = new Restaurant
+        {
+            Name = restaurant.Name,
+            Location = restaurant.Location,
+            Menu = new Menu() // Initialize with an empty Menu
+        };
+
+        // Ensure the Menu does not contain any items
+        newRestaurant.Menu.MenuItems = new Dictionary<string, MenuItem>();
+
         var result = await _firebaseClient
             .Child("Restaurants")
             .PostAsync(restaurant);
 
-        if (result.Object != null)
-        {
-            // Assuming your Restaurant class has an Id property
-            restaurant.Id = result.Key; // Firebase generates a unique key for each item
-            return restaurant;
-        }
-        return null;
+        restaurant.Id = result.Key; // Capture and assign Firebase-generated ID
+
+        return restaurant; // Return the newly created restaurant with its ID
     }
+
 
     //Get all
     public async Task<List<Restaurant>> GetAllRestaurantsAsync()
@@ -140,18 +148,22 @@ public class FirebaseService
         {
             if (snapShot.Object?.Menu.MenuItems != null)
             {
-                // Add all MenuItems in the current snapshot's Menu to the allMenuItems list
-                allMenuItems.AddRange(snapShot.Object.Menu.MenuItems);
+                // The MenuItems property is a Dictionary<string, MenuItem>, so iterate over it
+                foreach (var menuItemEntry in snapShot.Object.Menu.MenuItems)
+                {
+                    // Add the MenuItem to the allMenuItems list
+                    allMenuItems.Add(menuItemEntry.Value);
+                }
             }
         }
         return allMenuItems;
     }
 
+
     //Create menuItem
 
-    public async Task AddMenuItemAsync(string restaurantId, string name, string description, double price)
+    public async Task<MenuItem> AddMenuItemAsync(string restaurantId, string name, string description, double price)
     {
-        // Create a new MenuItem object
         MenuItem newItem = new MenuItem
         {
             Name = name,
@@ -159,13 +171,18 @@ public class FirebaseService
             Price = price
         };
 
-        // Assuming each restaurant's menu is directly under "menu" and contains "menuItems"
-        await _firebaseClient
+        var result = await _firebaseClient
             .Child("Restaurants")
-            .Child(restaurantId) // Use the restaurantId parameter to specify the restaurant
+            .Child(restaurantId)
             .Child("menu")
-            .Child("menuItems") // Specify the "menuItems" node where individual items are stored
-            .PostAsync(newItem); // Add the new item to the list of menu items
+            .Child("menuItems")
+            .PostAsync(newItem);
+
+        // Capture and assign the generated key as the MenuItem's ID
+        newItem.Id = result.Key;
+
+        return newItem; // Return the updated MenuItem object with an ID
     }
+
 
 }

@@ -10,8 +10,10 @@ namespace Bham_Events.Models
         [JsonProperty("location")]
         public string Location { get; set; }
 
-        [JsonProperty("menu")]
-        public Menu Menu { get; set; }
+        // Make Menu nullable and do not initialize it by default.
+        // This way, a Menu must be explicitly added, avoiding automatic creation of empty menus.
+        [JsonProperty("menu", NullValueHandling = NullValueHandling.Ignore)]
+        public Menu? Menu { get; set; }
 
         // Ignore this property when sending to Firebase
         [JsonIgnore]

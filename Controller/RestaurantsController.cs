@@ -1,4 +1,5 @@
-﻿using Bham_Events.Models;
+﻿using Bham_Events.DTO.RestaurantDTO;
+using Bham_Events.Models;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -13,15 +14,39 @@ public class RestaurantsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddRestaurant([FromBody] Restaurant restaurant)
+    public async Task<ActionResult<RestaurantReadDto>> AddRestaurant([FromBody] RestaurantCreateDto createDto)
     {
-        var createdRestaurant = await _firebaseService.AddRestaurantAsync(restaurant);
+        // Map the DTO to your domain model
+        var restaurantToCreate = new Restaurant
+        {
+            Name = createDto.Name,
+            Location = createDto.Location,
+            // Menu is intentionally left out or set to null since it's not part of creation DTO
+            Menu = null
+        };
+
+        // Call the service to add the new restaurant
+        var createdRestaurant = await _firebaseService.AddRestaurantAsync(restaurantToCreate);
+
+        // Check if the restaurant was successfully created
         if (createdRestaurant == null)
         {
             return BadRequest("Could not add the restaurant.");
         }
-        return CreatedAtAction(nameof(GetRestaurant), new { id = createdRestaurant.Id }, createdRestaurant);
+
+        // Map the domain model back to a read DTO
+        var restaurantReadDto = new RestaurantReadDto
+        {
+            Id = createdRestaurant.Id,
+            Name = createdRestaurant.Name,
+            Location = createdRestaurant.Location,
+            // Populate other fields as necessary
+        };
+
+        // Return the created restaurant read DTO with a 201 Created response
+        return CreatedAtAction(nameof(GetRestaurant), new { id = restaurantReadDto.Id }, restaurantReadDto);
     }
+
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Restaurant>>> GetAllRestaurants()

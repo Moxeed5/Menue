@@ -4,7 +4,6 @@ namespace Bham_Events.Models
 {
     public class Menu
     {
-        [JsonProperty("menuItems")]
-        public List<MenuItem> MenuItems { get; set; }
+        public Dictionary<string, MenuItem> MenuItems { get; set; }
     }
 }
