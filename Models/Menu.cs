@@ -4,6 +4,6 @@ namespace Bham_Events.Models
 {
     public class Menu
     {
-        public Dictionary<string, MenuItem> MenuItems { get; set; }
+        public Dictionary<string, MenuItem> MenuItems { get; set; } = new Dictionary<string, MenuItem>();
     }
 }

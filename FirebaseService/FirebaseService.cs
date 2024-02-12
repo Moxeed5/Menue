@@ -95,18 +95,32 @@ public class FirebaseService
 
     //add menu
 
+    //public async Task AddMenuAsync(string restaurantId, Menu menu)
+    //{
+    //    // No result variable is needed because PutAsync does not return a value.
+    //    await _firebaseClient
+    //        .Child("Restaurants")
+    //        .Child(restaurantId)
+    //        .Child("menu")
+    //        .PutAsync(menu); // This will overwrite the existing menu or create it if it doesn't exist.
+
+    //    // Since PutAsync doesn't return a value, you don't have a result to check or an ID to set.
+    //    // The menu is directly associated with the restaurantId.
+    //}
+
     public async Task AddMenuAsync(string restaurantId, Menu menu)
     {
-        // No result variable is needed because PutAsync does not return a value.
+        // Clear the menuItems to ensure it's empty
+        menu.MenuItems = new Dictionary<string, MenuItem>();
+
         await _firebaseClient
             .Child("Restaurants")
             .Child(restaurantId)
             .Child("menu")
-            .PutAsync(menu); // This will overwrite the existing menu or create it if it doesn't exist.
-
-        // Since PutAsync doesn't return a value, you don't have a result to check or an ID to set.
-        // The menu is directly associated with the restaurantId.
+            .PutAsync(menu); // Now this will definitely create an empty menu
     }
+
+
 
     //get all menus
 
@@ -138,7 +152,7 @@ public class FirebaseService
     public async Task<List<MenuItem>> GetAllMenuItemsAsync()
     {
         var menuItemsSnapShot = await _firebaseClient
-            .Child("Restaurants") // Make sure this is spelled correctly
+            .Child("Restaurants") 
             .OnceAsync<Restaurant>();
 
         var allMenuItems = new List<MenuItem>();
@@ -146,16 +160,20 @@ public class FirebaseService
         // Iterate over each snapshot and add each menu item individually
         foreach (var snapShot in menuItemsSnapShot)
         {
-            if (snapShot.Object?.Menu.MenuItems != null)
+            // First, ensure snapShot.Object is not null
+            if (snapShot.Object != null)
             {
-                // The MenuItems property is a Dictionary<string, MenuItem>, so iterate over it
-                foreach (var menuItemEntry in snapShot.Object.Menu.MenuItems)
+                // Then, check if Menu is not null and MenuItems is not null or empty
+                if (snapShot.Object.Menu != null && snapShot.Object.Menu.MenuItems != null)
                 {
-                    // Add the MenuItem to the allMenuItems list
-                    allMenuItems.Add(menuItemEntry.Value);
+                    foreach (var menuItemEntry in snapShot.Object.Menu.MenuItems)
+                    {
+                        allMenuItems.Add(menuItemEntry.Value);
+                    }
                 }
             }
         }
+
         return allMenuItems;
     }
 
